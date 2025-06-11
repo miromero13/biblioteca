@@ -41,6 +41,18 @@ class BookController extends Controller
         return view('home', compact('categories', 'subcategories', 'books', 'totalBooks', 'totalCategories', 'totalSubcategories', 'searchTerm'));
     }
 
+    public function showCategorySubcategories($id)
+    {
+        // Obtener la categoría seleccionada
+        $category = Category::findOrFail($id);
+
+        // Obtener las subcategorías que pertenecen a esa categoría
+        $subcategories = Subcategory::where('category_id', $id)->get();
+
+        // Retornar la vista con las subcategorías
+        return view('category-subcategories', compact('category', 'subcategories'));
+    }
+
     public function showSubcategoryBooks(Request $request, $id)
     {
         // Obtener la subcategoría seleccionada

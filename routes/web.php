@@ -30,10 +30,11 @@ Route::get('/loading', [AuthController::class, 'loading'])->name('loading')->mid
 
 
 // Rutas protegidas por autenticación
+// Rutas para las subcategorías y los libros de la subcategoría
 Route::middleware('auth')->group(function () {
     Route::get('/home', [BookController::class, 'index'])->name('home');
     Route::get('/category/{id}/subcategories', [BookController::class, 'showCategorySubcategories'])->name('categories.subcategories');
-    Route::get('/subcategory/{id}/books', [BookController::class, 'showSubcategoryBooks'])->name('subcategory.books');
+    Route::get('/subcategory/{id}/books', [BookController::class, 'showSubcategoryBooks'])->name('subcategories.books');
 
     Route::post('/books', [BookController::class, 'storeBook'])->name('books.store');
     Route::post('/categories', [BookController::class, 'storeCategory'])->name('categories.store');

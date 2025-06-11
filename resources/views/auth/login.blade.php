@@ -56,6 +56,16 @@
             padding-left: 1.2rem;
             margin: 0;
         }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 1rem;
+        }
+        .remember-me input {
+            width: auto;
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +86,10 @@
             @csrf
             <input type="email" name="email" value="{{ old('email') }}" placeholder="Escribir correo..." required autofocus>
             <input type="password" name="password" placeholder="Contraseña" required>
+            <div class="remember-me">
+                <input type="checkbox" name="remember" id="remember">
+                <label for="remember">Recordarme</label>
+            </div>
             <button type="submit">Entrar</button>
         </form>
     </div>

@@ -9,17 +9,14 @@ class Book extends Model
 {
     use HasFactory;
 
-    // Definir la tabla que corresponde al modelo
     protected $table = 'books';
-
-    // Definir los campos que se pueden asignar masivamente
-    protected $fillable = ['code', 'quantity', 'title', 'author', 'editorial', 'year', 'category_id'];
+    protected $fillable = ['code', 'quantity', 'title', 'author', 'editorial', 'year', 'subcategory_id'];
 
     /**
-     * Relación con la categoría
+     * Relación con la subcategoría
      */
-    public function category()
+    public function subcategory()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Subcategory::class);
     }
 }

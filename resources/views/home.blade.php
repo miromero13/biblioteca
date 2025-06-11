@@ -5,12 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         /* Estilo del carrusel */
         .category-carousel .carousel-item img {
-            height: 250px;
-            object-fit: cover;
-            border-radius: 8px;
+            /* Ajustamos la altura para que ocupe más espacio y sea responsive */
+            height: 400px; /* Altura fija para todas las imágenes del carrusel */
+            object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+            width: 100%; /* Asegura que la imagen ocupe el 100% del ancho */
+            display: block; /* Asegura que la imagen sea un bloque y ocupe todo el contenedor */
+            border-radius: 0; /* Quitamos el border-radius para un aspecto más amplio */
+        }
+
+        /* Estilo de las imágenes dentro del carrusel */
+        .carousel-item {
+            position: relative; /* Asegura que cada elemento se posicione correctamente */
+        }
+
+        .carousel-item.active {
+            display: block; /* Asegura que solo un carrusel item esté visible */
+        }
+
+        /* Agregar espacio para las leyendas del carrusel */
+        .carousel-caption {
+            background: rgba(0, 0, 0, 0.5); /* Fondo oscuro para mejor visibilidad */
+            border-radius: 5px;
+        }
+
+        /* Asegurando que el carrusel ocupe el 100% de su contenedor */
+        .carousel-inner {
+            overflow: hidden; /* Ocultar contenido fuera de los límites del carrusel */
         }
 
         /* Estilo para el header */
@@ -81,17 +105,7 @@
         /* Carrusel de categorías */
         .carousel-caption h5 {
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-        }
-
-        .carousel-item {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .carousel-item img {
-            width: 100%;
-            max-width: 100%;
+            font-size: 2.5rem; /* Ajustar el tamaño del texto para que se vea bien */
         }
 
         /* Estilo de las tarjetas de estadísticas */
@@ -137,7 +151,6 @@
 </head>
 <body>
 
-    <!-- Header -->
     <div class="header">
         <div class="d-flex">
             <div class="logo">M</div>
@@ -146,6 +159,7 @@
         <div class="d-flex">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal">Agregar Libro</button>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Agregar Categoría</button>
+            <button class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#addSubcategoryModal">Agregar Subcategoría</button>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn logout-btn">
@@ -155,12 +169,9 @@
         </div>
     </div>
 
-    <!-- Contenedor principal -->
     <div class="container content">
-        <!-- Título principal -->
         <h1 class="text-center mb-4">Bienvenido, {{ auth()->user()->name }}</h1>
-        
-        <!-- Estadísticas -->
+
         <div class="row mt-4">
             <div class="col-12 col-md-4">
                 <div class="card shadow-sm">
@@ -181,74 +192,39 @@
             <div class="col-12 col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">Resultados de búsqueda</h5>
-                        <p class="card-text">{{ count($books) }}</p>
+                        <h5 class="card-title">Total de Subcategorías</h5>
+                        <p class="card-text">{{ $totalSubcategories }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Carrusel de Categorías -->
-        <div id="categoryCarousel" class="carousel slide category-carousel mt-5" data-bs-ride="carousel">
+        <h3 class="mt-5 mb-3">Categorías</h3>
+        <div id="categoryCarousel" class="carousel slide category-carousel mt-3" data-bs-ride="carousel">
             <div class="carousel-inner">
-                <!-- Agrupamos tres elementos en cada item del carrusel -->
-                @foreach ($categories->chunk(3) as $chunk)
+                @foreach ($categories as $category)
                     <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                        <div class="row">
-                            @foreach ($chunk as $category)
-                                <div class="col-12 col-md-4">
-                                    <a href="{{ route('books.category', $category->id) }}">
-                                        <img src="{{ $category->image }}" class="d-block w-100" alt="{{ $category->name }}">
-                                        <!-- <div class="carousel-caption d-none d-md-block">
-                                            <h5>{{ $category->name }}</h5>
-                                        </div> -->
-                                    </a>
-                                </div>
-                            @endforeach
-                        </div>
+                        <a href="{{ route('categories.subcategories', $category->id) }}">
+                            <img src="{{ $category->image }}" class="d-block w-100" alt="{{ $category->name }}">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>{{ $category->name }}</h5>
+                            </div>
+                        </a>
                     </div>
                 @endforeach
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#categoryCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+                <span class="visually-hidden">Anterior</span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#categoryCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+                <span class="visually-hidden">Siguiente</span>
             </button>
         </div>
 
-        <!-- Tabla de Libros -->
-        <div class="mt-5">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Título</th>
-                        <th>Autor</th>
-                        <th>Editorial</th>
-                        <th>Año</th>
-                        <th>Categoría</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($books as $book)
-                        <tr>
-                            <td>{{ $book->code }}</td>
-                            <td>{{ $book->title }}</td>
-                            <td>{{ $book->author }}</td>
-                            <td>{{ $book->editorial }}</td>
-                            <td>{{ $book->year }}</td>
-                            <td>{{ $book->category->name }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+    </div> 
 
-    <!-- Modal para Agregar Libro -->
     <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -284,10 +260,10 @@
                             <input type="number" class="form-control" name="year" required>
                         </div>
                         <div class="mb-3">
-                            <label for="category_id" class="form-label">Categoría</label>
-                            <select class="form-control" name="category_id" required>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <label for="subcategory_id" class="form-label">Subcategoría</label>
+                            <select class="form-control" name="subcategory_id" required>
+                                @foreach ($subcategories as $subcategory)
+                                    <option value="{{ $subcategory->id }}">{{ $subcategory->name }} ({{ $subcategory->category->name ?? 'Sin Categoría' }})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -298,7 +274,6 @@
         </div>
     </div>
 
-    <!-- Modal para Agregar Categoría -->
     <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -318,6 +293,36 @@
                             <input type="text" class="form-control" name="image" placeholder="Pega la URL de la imagen" required>
                         </div>
                         <button type="submit" class="btn btn-success">Guardar Categoría</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addSubcategoryModal" tabindex="-1" aria-labelledby="addSubcategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSubcategoryModalLabel">Agregar Subcategoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('subcategories.store') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="category_id" class="form-label">Categoría Principal</label>
+                            <select class="form-control" name="category_id" required>
+                                <option value="">Selecciona una categoría</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre de la Subcategoría</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <button type="submit" class="btn btn-info text-white">Guardar Subcategoría</button>
                     </form>
                 </div>
             </div>

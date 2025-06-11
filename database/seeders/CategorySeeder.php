@@ -13,9 +13,9 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::create(['name' => 'Ficción', 'image' => 'https://via.placeholder.com/400x250/FF5733/FFFFFF?text=Ficcion']);
-        Category::create(['name' => 'Ciencia', 'image' => 'https://via.placeholder.com/400x250/33FF57/FFFFFF?text=Ciencia']);
-        Category::create(['name' => 'Historia', 'image' => 'https://via.placeholder.com/400x250/3357FF/FFFFFF?text=Historia']);
-        Category::create(['name' => 'Infantil', 'image' => 'https://via.placeholder.com/400x250/F733FF/FFFFFF?text=Infantil']);
+        Category::create(['name' => 'Ficción', 'image' => 'https://img.freepik.com/vector-premium/astronauta-personaje-dibujos-animados-bola-luna-ciencia-ficcion-aislada_138676-3186.jpg']);
+        Category::create(['name' => 'Ciencia', 'image' => 'https://i.pinimg.com/736x/61/f4/33/61f4339ef1097f10274028b25c7137b7.jpg']);
+        Category::create(['name' => 'Historia', 'image' => 'https://www.lifeder.com/wp-content/uploads/2021/06/Orange-and-Yellow-Illustrated-International-Museum-Day-Social-Media-Poster.jpg']);
+        Category::create(['name' => 'Infantil', 'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuG1KiKsYg9-gmeilSkRlWfa_ohGf0jKv3qw&s']);
     }
 }

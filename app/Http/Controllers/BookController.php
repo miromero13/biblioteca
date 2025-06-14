@@ -4,20 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Category;
-use App\Models\Subcategory; // Importar Subcategory
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
     public function index(Request $request)
     {
-        // Obtener todas las categorías
         $categories = Category::all();
 
-        // Obtener todas las subcategorías (para el formulario de agregar libro/categoría)
         $subcategories = Subcategory::all();
 
-        // Lógica de búsqueda para la página 'home'
         $searchTerm = $request->input('search');
         if ($searchTerm) {
             $books = Book::where('title', 'like', '%' . $searchTerm . '%')
@@ -27,26 +24,20 @@ class BookController extends Controller
                          ->with('subcategory.category')
                          ->get();
         } else {
-            // Si no hay término de búsqueda, inicializar $books como una colección vacía
-            // para que no se listen por defecto, como lo pediste anteriormente.
             $books = collect();
         }
 
-        // Contar el total de libros y categorías
         $totalBooks = Book::sum('quantity');
         $totalCategories = Category::count();
-        $totalSubcategories = Subcategory::count(); // Nuevo contador
+        $totalSubcategories = Subcategory::count();
 
-        // Retornar la vista 'home'
         return view('home', compact('categories', 'subcategories', 'books', 'totalBooks', 'totalCategories', 'totalSubcategories', 'searchTerm'));
     }
 
     public function showCategorySubcategories($id)
     {
-        // Obtener la categoría seleccionada
         $category = Category::findOrFail($id);
 
-        // Obtener las subcategorías que pertenecen a esa categoría
         $subcategories = Subcategory::where('category_id', $id)->get();
 
         // Retornar la vista con las subcategorías

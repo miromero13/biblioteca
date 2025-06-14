@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,14 +25,30 @@
             margin-bottom: 1.5rem;
             color: #333;
         }
-        input[type="email"],
-        input[type="password"] {
+        .login-container input[type="email"],
+        .login-container input[type="password"],
+        .login-container .password-wrapper input {
             width: 100%;
             padding: 0.6rem;
-            margin-bottom: 1rem;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .password-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        .password-wrapper input {
+            padding-right: 2.5rem;
+        }
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 0px;
+            transform: translateY(-90%);
+            cursor: pointer;
+            color: #888;
         }
         button {
             width: 100%;
@@ -85,7 +102,12 @@
         <form method="POST" action="{{ url('/login') }}">
             @csrf
             <input type="email" name="email" value="{{ old('email') }}" placeholder="Escribir correo..." required autofocus>
-            <input type="password" name="password" placeholder="Contraseña" required>
+            
+            <div class="password-wrapper">
+                <input type="password" name="password" id="password" placeholder="Contraseña" required>
+                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+            </div>
+
             <div class="remember-me">
                 <input type="checkbox" name="remember" id="remember">
                 <label for="remember">Recordarme</label>
@@ -93,5 +115,17 @@
             <button type="submit">Entrar</button>
         </form>
     </div>
+
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
 </body>
 </html>
